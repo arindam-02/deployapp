@@ -1,11 +1,24 @@
 import "./App.css";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function App() {
+  const [userData, setUserData] = useState([]);
+  const getList = async () => {
+    const data = await axios.get("http://localhost:3001/api/users");
+    setUserData(data.data.userData);
+  };
+  // console.log(userData);
+
+  useEffect(() => {
+    getList();
+  }, []);
   return (
     <>
       <div>
         <h1>User Table</h1>
-        <table class="table table-dark table-striped">
+        {/* <button onClick={handleClick}>Get users</button> */}
+        <table className="table table-dark table-striped">
           <thead>
             <tr>
               <th scope="col">#</th>
@@ -15,24 +28,16 @@ function App() {
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Mark</td>
-              <td>Otto</td>
-              <td>---</td>
-            </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Jacob</td>
-              <td>Thornton</td>
-              <td>---</td>
-            </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Arindam</td>
-              <td>Das</td>
-              <td>---</td>
-            </tr>
+            {userData
+              ? userData.map((user, index) => (
+                  <tr key={index}>
+                    <td scope="row">{user.user_id}</td>
+                    <td>{user.first_name}</td>
+                    <td>{user.last_name}</td>
+                    <td>{user.email}</td>
+                  </tr>
+                ))
+              : "no data"}
           </tbody>
         </table>
       </div>
